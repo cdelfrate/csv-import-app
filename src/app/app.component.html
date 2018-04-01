@@ -1,0 +1,269 @@
+<br/><br/> 
+<h1>Data Loader</h1>
+<br/><br/> 
+
+
+<div style = "float:right; width:33.33%" >
+        <button #btnValidate (click)="Validate()">Validate</button>
+        <button #btnImport (click)="doImport()">Import Data</button>
+</div>
+
+<div>
+
+ 
+
+  
+  
+  <div style = "float:left">
+
+     <ng2-file-input  [style]="{'float':'left' }"  (onRemoved)="onRemoved($event)" (onAdded)="onAdded($event)" (onAction)="onAction($event)" [multiple]="false" [show-previews]="false"> </ng2-file-input>
+ 
+  </div>
+
+  <div style = "float:left">
+    <p-dropdown #DDImp 
+                      [options]="ImportTypes"
+                      [style]="{'width':'90%', 'overflow':'visible', 'float':'left', 'margin-left': '50px' }" 
+                      [autoWidth] = "true"
+                      placeholder="Select an Import" 
+                     
+                      (onChange)="onChangeImp([DDImp.selectedOption])"
+                          
+                      >
+             
+         
+     </p-dropdown>
+     
+   </div>   
+   <!-- optionLabel="Import Type"-->
+   
+   
+   <!--  <div style = "float:left">
+     <p style ="margin-left:50px"> Selected Import: {{selectedImportType ? selectedImportType.label : 'none'}} </p>
+   </div>-->
+
+
+
+
+
+  <br/><br/> 
+  <br/><br/> 
+  <br/><br/> 
+  <br/><br/> 
+ 
+
+  <div>
+
+
+        <p-table 
+        #tableImport class="datable1"
+        [(selection)]="selectedRow"
+        styleClass = "table table-hover"
+        (onRowSelect)="onRowSelect($event)"
+        (onPageChange)="onPageChange($event)"
+        margin-top = "20%"
+   
+        
+        >
+            
+        
+  
+           <ng-template pTemplate="header" let-columns >
+              <tr >
+                  <th *ngFor="let col of columns" >
+                      {{col.header}}
+                  </th>
+              </tr>
+           </ng-template>
+  
+           <ng-template pTemplate="frozenrows" let-row let-rowIndex="rowIndex" let-columns="columns" >
+              
+              <tr  >    
+                <td #td1 *ngFor="let col of columns"  
+                    [ngClass]="(row[col.field]  == 'Map Column' || row[col.field] == null) ? 'set-unmapped-cell' : 'set-mapped-cell' " 
+                     >
+                            {{row[col.field] }}
+  
+                       <p-dropdown 
+                             #DD1 
+                             [(ngModel)]="row[col.field]" 
+                             [autoWidth]="false" 
+                             [style]="{'width':'100%', 'overflow':'visible', 'height':'35px', 'margin-bottom':'15px' }"  
+                             appendTo="body"                     
+                             (onChange)="onChange(row, [DD1.selectedOption.label], [col.field])"
+                             [options]="MapOptions"
+                             placeholder= "Select Column"
+                           >
+                       </p-dropdown>     
+                </td>
+              </tr>
+           </ng-template>
+        
+            <ng-template pTemplate="body" let-row let-rowIndex="rowIndex" let-expanded="expanded" let-columns="columns">
+              <tr *ngIf = "rowIndex > 0;"  >
+                 <td #td2 pEditableColumn *ngFor="let col of columns" >
+                    
+                        <a href="#" [pRowToggler]="rowData">
+                                <i [ngClass]="expanded ? 'fa fa-fw fa-chevron-circle-down' : 'fa fa-fw fa-chevron-circle-right'"></i>
+                        </a>  
+
+                    <p-cellEditor>
+
+                            <ng-template pTemplate="input">
+                               <input type="text" [(ngModel)]="row[col.field]">
+                            </ng-template>
+                            
+                            <ng-template pTemplate="output">
+                                {{row[col.field]}}
+                            </ng-template>
+
+                    </p-cellEditor>
+                 </td> 
+              </tr>
+            </ng-template>
+
+
+            <ng-template pTemplate="rowexpansion" let-rowData let-columns="columns">
+                <tr>
+                    <td [attr.colspan]="columns.length + 1">
+                        <div  >
+                            {{row[col.field]}}
+                           
+                        </div>
+                    </td>
+                </tr>
+            </ng-template>
+     
+        </p-table>  
+
+        
+
+
+ <!--       <p-table 
+        #tableImport class="datable1"
+        [(selection)]="selectedRow"
+        styleClass = "table table-hover"
+        (onRowSelect)="onRowSelect($event)"
+        (onPageChange)="onPageChange($event)"
+        margin-top = "20%"
+        
+        
+        >
+            
+        
+  
+           <ng-template pTemplate="header" let-columns >
+              <tr >
+                  <th *ngFor="let col of columns" >
+                      {{col.header}}
+                  </th>
+              </tr>
+           </ng-template>
+  
+           <ng-template pTemplate="frozenrows" let-row let-rowIndex="rowIndex" let-columns="columns" >
+              
+              <tr  >    
+                <td #td1 *ngFor="let col of columns"  
+                    [ngClass]="(row[col.field]  == 'Map Column' || row[col.field] == null) ? 'set-unmapped-cell' : 'set-mapped-cell' " 
+                     >
+                            {{row[col.field] }}
+  
+                       <p-dropdown 
+                             #DD1 
+                             [(ngModel)]="row[col.field]" 
+                             [autoWidth]="false" 
+                             [style]="{'width':'100%', 'overflow':'visible', 'height':'35px', 'margin-bottom':'15px' }"  
+                             appendTo="body"                     
+                             (onChange)="onChange(row, [DD1.selectedOption.label], [col.field])"
+                             [options]="MapOptions"
+                             placeholder= "Select Column"
+                           >
+                       </p-dropdown>     
+                </td>
+              </tr>
+           </ng-template>
+        
+            <ng-template pTemplate="body" let-row let-rowIndex="rowIndex" let-expanded="expanded" let-columns="columns">
+              <tr *ngIf = "rowIndex > 0;"  >
+                 <td #td2 pEditableColumn *ngFor="let col of columns" >
+
+                    <p-cellEditor>
+
+                            <ng-template pTemplate="input">
+                               <input type="text" [(ngModel)]="row[col.field]">
+                            </ng-template>
+                            
+                            <ng-template pTemplate="output">
+                                {{row[col.field]}}
+                            </ng-template>
+
+                    </p-cellEditor>
+                 </td> 
+              </tr>
+            </ng-template>
+     
+        </p-table>  -->
+
+        
+
+  <!--  <p-table 
+      #tableImport class="datable1"
+      [(selection)]="selectedRow"
+      styleClass = "table table-hover"
+      (onRowSelect)="onRowSelect($event)"
+      (onPageChange)="onPageChange($event)"
+      margin-top = "20%"
+      
+      >
+          
+      
+
+         <ng-template pTemplate="header" let-columns >
+            <tr >
+                <th *ngFor="let col of columns" >
+                    {{col.header}}
+                </th>
+            </tr>
+         </ng-template>
+
+         <ng-template pTemplate="frozenrows" let-row let-rowIndex="rowIndex" let-columns="columns" >
+            
+            <tr  >    
+              <td #td1 *ngFor="let col of columns"  [ngClass]="(row[col.field]  == 'Map Column' || row[col.field] == null) ? 'set-unmapped-cell' : 'set-mapped-cell' ">
+                          {{row[col.field] }}
+
+                     <p-dropdown 
+                           #DD1 
+                           [(ngModel)]="row[col.field]" 
+                           [autoWidth]="false" 
+                           [style]="{'width':'100%', 'overflow':'visible', 'height':'35px', 'margin-bottom':'15px' }"  
+                           appendTo="body"                     
+                           (onChange)="onChange(row, [DD1.selectedOption.label], [col.field])"
+                           [options]="MapOptions"
+                           placeholder= "Select Column"
+                         >
+                     </p-dropdown>     
+              </td>
+            </tr>
+         </ng-template>
+      
+          <ng-template pTemplate="body" let-row let-rowIndex="rowIndex" let-columns="columns">
+            <tr *ngIf = "rowIndex > 0;"  >
+               <td #td2 [pEditableColumn]="item" [pEditableColumnField]="col.field" *ngFor="let col of columns" >
+                  {{row[col.field]}}
+               </td> 
+            </tr>
+          </ng-template>
+   
+      </p-table>  -->
+
+
+   
+     
+    
+    </div>    
+  
+ 
+
+
+</div>

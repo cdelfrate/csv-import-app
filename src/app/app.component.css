@@ -1,0 +1,238 @@
+/* You can add global styles to this file, and also import other style files */
+/* Styles go here */
+
+nav {
+  color: rgb(24, 42, 206);
+  text-align: left;
+  width: 25%;
+  margin: 0;
+  border: 18px solid gray;
+  
+}
+
+h1 {
+  color:black;
+  font-size: 30px;
+  text-align: center;
+}
+
+h2 {
+  color: rgb(24, 42, 206);
+  width: 80%;
+  font-size: 16px;
+  text-align: center;
+}
+
+h3 {
+  color: rgb(24, 42, 206);
+  float:left;
+  width: 80%;
+  font-size: 16px;
+  text-align: center;
+}
+
+button {
+  font-family: Arial;
+  background-color: #0275d8;
+  color: white;
+ 
+  border: none;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  cursor: hand;
+  margin-left: 100px;
+
+
+}
+
+button:hover {
+  color: #039be5;
+  background-color: #CFD8DC;
+
+}
+
+table:hover {
+  color: #e503e5;
+  background-color: #CFD8DC;
+
+}
+
+
+
+.p-datatable.paginator{
+  position: fixed; 
+  margin-top: 25%;
+}
+
+div.divleftxxx {
+  display:inline;
+}
+div.divrightxxx {
+  display:inline;
+}
+
+
+
+
+.ng2-file-input .ng2-file-input-drop-container {
+  min-width: 200px;
+  max-width: 250px;
+  min-height: 150px;
+  border: 2px dashed #333;
+  padding: 7px;
+  margin-left: 50px;
+  background-color: #eee;
+  
+}
+.ng2-file-input .ng2-file-input-drop-container button {
+  margin-left: 25px;
+}
+.ng2-file-input .ng2-file-input-drop-container.file-is-over {
+  border: 2px solid #007e40;
+  color: #007e40;
+}
+.ng2-file-input input {
+  display: none;
+}
+.ng2-file-input .ng2-file-input-files {
+  margin-top: 8px;
+}
+.ng2-file-input .ng2-file-input-files .ng2-file-input-file {
+  overflow: hidden;
+  display: inline-block;
+  margin-right: 5px;
+  margin-bottom: 5px;
+  vertical-align: middle;
+  text-align: center;
+  position: relative;
+}
+.ng2-file-input .ng2-file-input-files .ng2-file-input-file .ng2-file-input-file-text {
+  max-width: 110px;
+  line-height: 16px;
+  display: block;
+  padding: 2px;
+  width: auto;
+  overflow: hidden;
+  word-wrap: break-word;
+  font-size: 12px;
+}
+.ng2-file-input .ng2-file-input-files .ng2-file-input-file img {
+  width: 120px;
+  height: 120px;
+}
+.ng2-file-input .ng2-file-input-files .ng2-file-input-file.image {
+  width: 120px;
+  height: 120px;
+}
+.ng2-file-input .ng2-file-input-files .ng2-file-input-file.image .ng2-file-input-file-text {
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  line-height: 14px;
+  font-size: 11px;
+  background: rgba(255, 255, 255, 0.6);
+  white-space: nowrap;
+  z-index: 5;
+  text-overflow: ellipsis;
+}
+.ng2-file-input .ng2-file-input-files .ng2-file-input-file.image .ng2-file-input-file-text:hover {
+  overflow: auto;
+  white-space: pre-wrap;
+  text-overflow: initial;
+}
+.ng2-file-input .ng2-file-input-files .ng2-file-input-file.image .ng2-file-input-file-text.remove, .ng2-file-input .ng2-file-input-files .ng2-file-input-file-text.remove {
+  overflow:hidden;
+  position: absolute;
+  bottom: 0;
+  z-index: 3;
+  vertical-align: bottom;
+  max-width: 120px;
+  font-size: 14px;
+  line-height: 20px;
+  top: 0;
+  left: 0;
+  right: 0;
+  opacity: 0;
+  padding: 0;
+}
+.ng2-file-input .ng2-file-input-files .ng2-file-input-file.image .ng2-file-input-file-text.remove p, .ng2-file-input .ng2-file-input-files .ng2-file-input-file-text.remove p {
+  position: absolute;
+  bottom: 5px;
+  width: 100%;
+  color: #fff;
+}
+.ng2-file-input .ng2-file-input-files .ng2-file-input-file.image .ng2-file-input-file-text.remove:hover, .ng2-file-input .ng2-file-input-files .ng2-file-input-file-text.remove:hover {
+  opacity: 1;
+  cursor: pointer;
+  background: rgba(169, 68, 66, 0.85);
+}
+
+
+/* TODO: this should really be in the component's CSS file, but it doesn't seem to apply to the PrimeNG data table properly there */
+.set-row {
+  /* TODO: first try this without '!important', but you might need it */
+  color: rgb(146, 42, 42) !important;
+  background: rgba(205, 243, 34, 0.966) !important;
+ /*background-color: #2CA8B1 !important;*/
+  height: 20px;
+  min-height: 30px;
+  line-height: 20px;
+
+} 
+
+.set-row-default { 
+  
+  line-height: 20px;
+
+} 
+
+
+.set-mapped-cell {
+  /* TODO: first try this without '!important', but you might need it */
+ 
+  background: rgba(154, 247, 146, 0.966) !important;
+ 
+
+} 
+
+.set-unmapped-cell {
+  /* TODO: first try this without '!important', but you might need it */
+
+  background: rgba(220, 233, 245, 0.966) !important;
+
+} 
+
+
+.ui-table table {
+  /*table-layout: auto; */
+  table-layout: fixed;
+  /*table-layout: inherit;*/
+  color: skyblue;
+  column-width: initial 120px;
+ /* align-items: center;*/
+  height: 100px;
+ /* line-height: 120px;*/
+ /* grid-column: width 120px;*/
+
+ /*min-height: 300px;*/
+}
+
+
+.ui-g-12 > span {
+  display: block;
+  margin-bottom: 4px;
+}
+
+/*.ui-table colgroup {
+  width: 90;
+  color: springgreen;
+}*/
+/*::ng-deep .ui-table {
+  min-height: 300px;
+  border: 1px solid #D5D5D5;
+}*/
+
+  * {
+    font-family: Arial, Helvetica, sans-serif;
+  }
