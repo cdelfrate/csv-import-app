@@ -5,7 +5,7 @@ import { SelectItem, Dropdown, Column, Row, Dialog } from 'primeng/primeng';
 import { QueryList } from '@angular/core';
 import { DataImportService } from './data-import.service';
 import { Table } from 'primeng/table';
-import { SidebarModule } from 'primeng/sidebar';
+
 
 
 
@@ -42,15 +42,6 @@ export class FieldMapItem {
   MapId: number;
 }
 
-export class RowThing {
-  name: number;
-  value: any;
-}
-
-/*interface SelectedImport {
-  value: string,
-  label: string
-}*/
 
 
 
@@ -61,14 +52,14 @@ export class RowThing {
   styleUrls: [ './app.component.css' ],
 
 
-  encapsulation: ViewEncapsulation.None //CDF not sure I want this
+  encapsulation: ViewEncapsulation.None // CDF not sure I want this
 })
 
 
 export class AppComponent implements OnInit {
       private myFileInputIdentifier:string = "tHiS_Id_IS_sPeeCiAL";
       public actionLog:string="";
-      @ViewChild('tableImport') tableImport: Table; //cdf this will map to the Prime ng turbo table in my HTML template
+      @ViewChild('tableImport') tableImport: Table; // cdf this will map to the Prime ng turbo table in my HTML template
 
       data: any [];
       dataMapRow: any [];
@@ -77,12 +68,11 @@ export class AppComponent implements OnInit {
       SizeCols: number;
       FieldNames: any [];
       Keys: any [];
-      csvData: string;
+
       selectedRow: any;
       aColumn: Column;
       aCols: Column[];
-      brands: SelectItem[];
-      MapJSONString: string="";
+      MapJSONString: string = "";
 
       aFieldDef: FieldDef;
       FieldDefs: FieldDef[];
@@ -134,11 +124,11 @@ export class AppComponent implements OnInit {
         tableInp.rowsPerPageOptions = [5, 10, 20, 100, 1000];
 
 
-     //   tableInp.styleClass = 'table table-hover';
-        tableInp.resizableColumns = true; //column headers overlap without this
+       //   tableInp.styleClass = 'table table-hover';
+        tableInp.resizableColumns = true; // column headers overlap without this
        // tableInp.responsive = true;
-        //tableInp.columnResizeMode = 'expand';
-        tableInp.scrollable = true; //frozen row dissapears if this is not set to true
+       // tableInp.columnResizeMode = 'expand';
+        tableInp.scrollable = true; // frozen row dissapears if this is not set to true
 
 
 
@@ -147,16 +137,15 @@ export class AppComponent implements OnInit {
       }
 
       public initMapRow(RowInp: any []) {
-        this.MapJSONString = '{';//formatting a string so it can be converted to JSON
+        this.MapJSONString = '{'; // formatting a string so it can be converted to JSON
         for (let i in this.Keys) {
                   this.MapJSONString = this.MapJSONString + '"' + this.Keys[i]+ '"'+ ':' + '"' +'Map Column' + '"' + ',';
                 }
 
         this.MapJSONString = this.MapJSONString.substr(0, (this.MapJSONString.length - 1)); // remove last comma
-        this.MapJSONString = this.MapJSONString + '}';//closing JSON format
+        this.MapJSONString = this.MapJSONString + '}'; // closing JSON format
         console.log(this.MapJSONString);
-        RowInp.unshift(JSON.parse(this.MapJSONString));//Add it to first row of the table in order to list fields that may be mapped for import          
-        //this.data.unshift(JSON.parse(this.MapJSONString));//Add it to first row of the table in order to list fields that may be mapped for import
+        RowInp.unshift(JSON.parse(this.MapJSONString));// Add it to first row of the table in order to list fields that may be mapped for import
       }
 
 
@@ -168,12 +157,12 @@ export class AppComponent implements OnInit {
 
         EmptyRows = new Array<FieldMapItem> ();
         while (i <= RowCount) {
-          EmptyRows.push('a', ''); //just fill up with empty rows
+          EmptyRows.push('a', ''); // just fill up with empty rows
           i++;
         }
 
         this.aCols = new Array<Column>();
-        this.aColumn = new Column; //need a new object each time to add new item to array
+        this.aColumn = new Column; // need a new object each time to add new item to array
         this.aColumn.field = 'Load Table';
         this.aColumn.header = 'Load Table';
         this.aColumn.editable = true;
@@ -187,7 +176,7 @@ export class AppComponent implements OnInit {
 
       ngOnInit(): void {
 
-        this.getImportTypes(); //list of all possible imports
+        this.getImportTypes(); // list of all possible imports
 
         this.selectedImportType = new ImportType;
         this.selectedImportType.label = 'N/A';
@@ -229,6 +218,13 @@ export class AppComponent implements OnInit {
 
 
 
+     /* SetRowStyle(rowData, rowIndex) { // this is to hightlight the first row for mapping
+        if (rowIndex === 0) {
+          return 'set-row';
+        }
+        return 'set-row-default';
+      }*/
+
       SetRowStyle(rowData, rowIndex) { // this is to hightlight the first row for mapping
         if (rowIndex === 0) {
           return 'set-row';
@@ -261,7 +257,7 @@ export class AppComponent implements OnInit {
           }
         });
 
-        if (!ItemFound) { //if there is no matching item then add the map item to the array
+        if (!ItemFound) { // if there is no matching item then add the map item to the array
           aFieldMapItem = new FieldMapItem;
           aFieldMapItem.ColumnIndex = ColIndex;
           aFieldMapItem.MapId = MapId;
@@ -279,12 +275,7 @@ export class AppComponent implements OnInit {
       }
 
       public Validate(event: any){
-        console.log(event);
-  //      this.getMapFieldOptions(this.selectedImportType.value);
-        this.getImportTypes();
-
-        console.log(this.ImportTypes);
-        console.log(this.MapOptions);
+        // todo
       }
 
 
@@ -325,7 +316,6 @@ export class AppComponent implements OnInit {
 
         const myfiles: File[] = this.ng2FileInputService.getCurrentFiles(event.id);
 
-        
           this.papa.parse(myfiles[0], {header: true,  // this is an important setting to determine if it will be json or array of arrays
             complete: (results, file) => {
                 this.data = results.data;
@@ -354,26 +344,9 @@ export class AppComponent implements OnInit {
 
                 this.dataMapRow = new Array(); // cdf may need to free previous instance of array mem leak?
                 this.initMapRow(this.dataMapRow);
-                console.log(this.dataMapRow);
                 this.initTable(this.tableImport);
-
-
-              /*  this.MapJSONString = '{';//formatting a string so it can be converted to JSON
-                for (let i in this.Keys) {
-                  this.MapJSONString = this.MapJSONString + '"' + this.Keys[i]+ '"'+ ':' + '"' +'Map Column' + '"' + ',';
-                }
-                this.MapJSONString = this.MapJSONString.substr(0, (this.MapJSONString.length - 1)); // remove last comma
-                this.MapJSONString = this.MapJSONString + '}';//closing JSON format
-                console.log(this.MapJSONString);
-                console.log(this.data);
-                this.data.unshift(JSON.parse(this.MapJSONString));//Add it to first row of the table in order to list fields that may be mapped for import
-                */
-
-               console.log(this.data);
-
-
-               this.getMapFieldOptions(this.selectedImportType.value);
-               this.getImportTypes();
+                this.getMapFieldOptions(this.selectedImportType.value);
+                this.getImportTypes();
 
             }
         });

@@ -101,11 +101,17 @@
         
             <ng-template pTemplate="body" let-row let-rowIndex="rowIndex" let-expanded="expanded" let-columns="columns">
               <tr *ngIf = "rowIndex > 0;"  >
+
+                 <td>
+                     <a href="#" [pRowToggler]="rowData">
+                                <i [ngClass]="expanded ? 'fa fa-fw fa-chevron-circle-down' : 'fa fa-fw fa-chevron-circle-right'"></i>
+                     </a>  
+                 </td>
+
+
                  <td #td2 pEditableColumn *ngFor="let col of columns" >
                     
-                        <a href="#" [pRowToggler]="rowData">
-                                <i [ngClass]="expanded ? 'fa fa-fw fa-chevron-circle-down' : 'fa fa-fw fa-chevron-circle-right'"></i>
-                        </a>  
+                     
 
                     <p-cellEditor>
 
@@ -123,11 +129,14 @@
             </ng-template>
 
 
+
+
             <ng-template pTemplate="rowexpansion" let-rowData let-columns="columns">
                 <tr>
                     <td [attr.colspan]="columns.length + 1">
                         <div  >
-                            {{row[col.field]}}
+                            <!-- {{row[col.field]}} -->
+                            yertyrejglfkdg
                            
                         </div>
                     </td>
