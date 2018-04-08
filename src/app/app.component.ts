@@ -43,6 +43,12 @@ export class FieldMapItem {
 }
 
 
+export class FieldItem {
+  PK: number;
+}
+
+
+
 
 
 
@@ -112,9 +118,12 @@ export class AppComponent implements OnInit {
 
       public initTable(tableInp: Table) {
         tableInp.columns = this.aCols; // cdf set column headers
-        tableInp.frozenValue = this.dataMapRow; // maprow
         tableInp.dataKey = tableInp.columns[0].field; // this is needed for rowexpansion might need to be unique
+
+
         tableInp.value = this.data;    // cdf load the value of the cells from the array into the table object
+        console.log(this.data);
+        tableInp.frozenValue = this.dataMapRow; // maprow
         tableInp.paginator = true;
 
         tableInp.rows = 10;
@@ -123,17 +132,12 @@ export class AppComponent implements OnInit {
         tableInp.pageLinks = 5;
         tableInp.rowsPerPageOptions = [5, 10, 20, 100, 1000];
 
-
        //   tableInp.styleClass = 'table table-hover';
         tableInp.resizableColumns = true; // column headers overlap without this
        // tableInp.responsive = true;
        // tableInp.columnResizeMode = 'expand';
         tableInp.scrollable = true; // frozen row dissapears if this is not set to true
-
-
-
-
-
+      //  tableInp.first = 1;
       }
 
       public initMapRow(RowInp: any []) {
@@ -148,6 +152,46 @@ export class AppComponent implements OnInit {
         RowInp.unshift(JSON.parse(this.MapJSONString));// Add it to first row of the table in order to list fields that may be mapped for import
       }
 
+      public addPrimaryKey(data: any []) {
+        let fi: FieldItem;
+        let cnt: number;
+
+        cnt = 1;
+        for (const i in data) {
+          fi = new FieldItem;
+          fi.PK = cnt;
+          cnt++;
+          data[i] =  Object.assign(fi, data[i]);
+        
+        }
+      }
+
+
+      public initCols(keys: any[]): Array<Column> {
+
+       let aCols: Array<Column> ;
+       let aColumn: Column;
+
+       aCols = new Array<Column>();
+       if (keys == null) { // if its null or undefined array then
+         aColumn = new Column; // need a new object each time to add new item to array
+         aColumn.field = 'Load Table';
+         aColumn.header = 'Load Table';
+         aColumn.editable = true;
+         aCols.push(aColumn)}
+       else {
+
+         for (let i in keys) {
+           aColumn = new Column;
+           aColumn.field = keys[i];
+           aColumn.header = keys[i];
+           aColumn.editable = true;
+           aCols.push(aColumn)}
+
+       }
+         return aCols;
+
+      }
 
       public initData(RowCount: number) {
         let i: number;
@@ -161,14 +205,7 @@ export class AppComponent implements OnInit {
           i++;
         }
 
-        this.aCols = new Array<Column>();
-        this.aColumn = new Column; // need a new object each time to add new item to array
-        this.aColumn.field = 'Load Table';
-        this.aColumn.header = 'Load Table';
-        this.aColumn.editable = true;
-        this.aCols.push(this.aColumn);
-
-
+        this.aCols = this.initCols(null);
         this.data = EmptyRows;
       }
 
@@ -218,12 +255,7 @@ export class AppComponent implements OnInit {
 
 
 
-     /* SetRowStyle(rowData, rowIndex) { // this is to hightlight the first row for mapping
-        if (rowIndex === 0) {
-          return 'set-row';
-        }
-        return 'set-row-default';
-      }*/
+
 
       SetRowStyle(rowData, rowIndex) { // this is to hightlight the first row for mapping
         if (rowIndex === 0) {
@@ -319,6 +351,9 @@ export class AppComponent implements OnInit {
           this.papa.parse(myfiles[0], {header: true,  // this is an important setting to determine if it will be json or array of arrays
             complete: (results, file) => {
                 this.data = results.data;
+
+                this.addPrimaryKey(this.data);
+
                 this.FieldNames = Object.values(this.data[0]);
                 this.Keys = Object.keys(this.data[0]);
 
@@ -328,20 +363,7 @@ export class AppComponent implements OnInit {
                 this.SizeData = this.data.length;
                 this.FieldDefs = new Array();
 
-
-
-
-                this.aCols = new Array<Column>();
-                for (let i in this.Keys) {
-                  this.aColumn = new Column; // need a new object each time to add new item to array
-                  this.aColumn.field = this.Keys[i];
-                  this.aColumn.header = this.Keys[i];
-                  this.aColumn.editable = true;
-                  this.aCols.push(this.aColumn)
-                }
-
-
-
+                this.aCols = this.initCols(this.Keys);
                 this.dataMapRow = new Array(); // cdf may need to free previous instance of array mem leak?
                 this.initMapRow(this.dataMapRow);
                 this.initTable(this.tableImport);
@@ -359,25 +381,25 @@ export class AppComponent implements OnInit {
 
       public onRemoved(event: any){
         this.actionLog += "\n FileInput: " + event.id;
-        this.actionLog += "\n Action: File removed";
+        this.actionLog += '\n Action: File removed';
       }
       public onInvalidDenied(event: any){
-        this.actionLog += "\n FileInput: " + event.id;
-        this.actionLog += "\n Action: File denied";
+        this.actionLog += '\n FileInput: ' + event.id;
+        this.actionLog += '\n Action: File denied';
       }
       public onCouldNotRemove(event: any){
-        this.actionLog += "\n FileInput: " + event.id;
-        this.actionLog += "\n Action: Could not remove file";
+        this.actionLog += '\n FileInput: ' + event.id;
+        this.actionLog += '\n Action: Could not remove file';
       }
-      public resetFileInput():void{
+      public resetFileInput(): void{
         this.ng2FileInputService.reset(this.myFileInputIdentifier);
       }
-      public logCurrentFiles():void{
-        const files =this.ng2FileInputService.getCurrentFiles(this.myFileInputIdentifier);
-        this.actionLog += "\n The currently added files are: " + this.getFileNames(files);
+      public logCurrentFiles(): void{
+        const files = this.ng2FileInputService.getCurrentFiles(this.myFileInputIdentifier);
+        this.actionLog += '\n The currently added files are: ' + this.getFileNames(files);
       }
-      private getFileNames(files:File[]):string{
-        const names =files.map(file => file.name);
+      private getFileNames(files: File[]): string{
+        const names = files.map(file => file.name);
         return names ? names.join(', ') : 'No files currently added.';
       }
     }

@@ -55,7 +55,10 @@
   <div>
 
 
-        <p-table 
+    
+
+
+      <!--  <p-table 
         #tableImport class="datable1"
         [(selection)]="selectedRow"
         styleClass = "table table-hover"
@@ -136,19 +139,19 @@
                     <td [attr.colspan]="columns.length + 1">
                         <div  >
                             <!-- {{row[col.field]}} -->
-                            yertyrejglfkdg
+                          <!--  yertyrejglfkdg
                            
                         </div>
                     </td>
                 </tr>
             </ng-template>
      
-        </p-table>  
+        </p-table>  -->
 
         
 
 
- <!--       <p-table 
+        <p-table 
         #tableImport class="datable1"
         [(selection)]="selectedRow"
         styleClass = "table table-hover"
@@ -167,16 +170,18 @@
                       {{col.header}}
                   </th>
               </tr>
-           </ng-template>
+           </ng-template> 
   
+
            <ng-template pTemplate="frozenrows" let-row let-rowIndex="rowIndex" let-columns="columns" >
               
               <tr  >    
-                <td #td1 *ngFor="let col of columns"  
+                <td #td1  *ngFor="let col of columns"
+                    
                     [ngClass]="(row[col.field]  == 'Map Column' || row[col.field] == null) ? 'set-unmapped-cell' : 'set-mapped-cell' " 
                      >
                             {{row[col.field] }}
-  
+                       
                        <p-dropdown 
                              #DD1 
                              [(ngModel)]="row[col.field]" 
@@ -190,10 +195,10 @@
                        </p-dropdown>     
                 </td>
               </tr>
-           </ng-template>
+           </ng-template> 
         
             <ng-template pTemplate="body" let-row let-rowIndex="rowIndex" let-expanded="expanded" let-columns="columns">
-              <tr *ngIf = "rowIndex > 0;"  >
+              <tr *ngIf = "rowIndex  >= 0;"  >
                  <td #td2 pEditableColumn *ngFor="let col of columns" >
 
                     <p-cellEditor>
@@ -211,7 +216,7 @@
               </tr>
             </ng-template>
      
-        </p-table>  -->
+        </p-table>  
 
         
 
