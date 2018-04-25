@@ -72,6 +72,12 @@ export class DataImportService {
     }
 
 
+    getErrorList(): Observable<ErrorType[]> {
+      return this.http.get<ErrorType[]>(this.ErrorListUrl);
+
+     }
+
+
 
 
   getImportTypes (): Observable<ImportType[]> {

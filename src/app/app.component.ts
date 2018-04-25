@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation, OnInit, ViewChild  } from '@angular/core';
+import { Component, ViewEncapsulation, OnInit, AfterViewInit, ViewChild,  ChangeDetectorRef   } from '@angular/core';
 import { Ng2FileInputService, Ng2FileInputAction } from 'ng2-file-input';
 import { PapaParseService } from 'ngx-papaparse';
 import { SelectItem, Dropdown, Column, Row, Dialog } from 'primeng/primeng';
@@ -51,7 +51,6 @@ export class FieldItem {
 
 
 
-
 @Component({
   selector: 'my-app',
   templateUrl: './app.component.html',
@@ -62,10 +61,12 @@ export class FieldItem {
 })
 
 
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit/*, AfterViewInit*/ {
       private myFileInputIdentifier:string = "tHiS_Id_IS_sPeeCiAL";
       public actionLog:string="";
+      @ViewChild('tableErrors') tableErrors: Table;
       @ViewChild('tableImport') tableImport: Table; // cdf this will map to the Prime ng turbo table in my HTML template
+
 
       data: any [];
       dataMapRow: any [];
@@ -78,6 +79,9 @@ export class AppComponent implements OnInit {
       selectedRow: any;
       aColumn: Column;
       aCols: Column[];
+
+      ErrorCols: Array<Column>;
+
       MapJSONString: string = "";
 
       aFieldDef: FieldDef;
@@ -88,7 +92,8 @@ export class AppComponent implements OnInit {
       ImportTypes: ImportType[];
       selectedImportType: ImportType;
 
-
+      ErrorList: ErrorType[];
+      selRowErrorList: ErrorType[];
 
       MapOptions: MapOption[];
       MapLayout: FieldMapItem[];  // this will be used to hold the current field mappings that are applied to the
@@ -100,7 +105,9 @@ export class AppComponent implements OnInit {
 
       constructor ( private ng2FileInputService: Ng2FileInputService,
                     private papa: PapaParseService,
-                    private DataImportService: DataImportService ) {
+                    private DataImportService: DataImportService,
+                    private cd: ChangeDetectorRef
+                     ) {
       }
 
       getImportTypes(): void {
@@ -115,30 +122,44 @@ export class AppComponent implements OnInit {
       }
 
 
+      getErrorList(): void {
+        this.DataImportService.getErrorList()
+        .subscribe(ErrorList => this.ErrorList = ErrorList);
+        console.log(this.ErrorList);
+      }
+
 
       public initTable(tableInp: Table) {
         tableInp.columns = this.aCols; // cdf set column headers
         tableInp.dataKey = tableInp.columns[0].field; // this is needed for rowexpansion might need to be unique
-
-
         tableInp.value = this.data;    // cdf load the value of the cells from the array into the table object
-        console.log(this.data);
         tableInp.frozenValue = this.dataMapRow; // maprow
         tableInp.paginator = true;
-
         tableInp.rows = 10;
         tableInp.responsive = false;
         tableInp.rowHover = true;
         tableInp.pageLinks = 5;
         tableInp.rowsPerPageOptions = [5, 10, 20, 100, 1000];
-
-       //   tableInp.styleClass = 'table table-hover';
         tableInp.resizableColumns = true; // column headers overlap without this
-       // tableInp.responsive = true;
-       // tableInp.columnResizeMode = 'expand';
         tableInp.scrollable = true; // frozen row dissapears if this is not set to true
-      //  tableInp.first = 1;
       }
+
+      public initTableErrors(tableInp: Table) {
+
+        if (tableInp !== undefined) {
+      //  tableInp.columns = this.initErrCols(); // cdf set column headers
+        this.ErrorCols = this.initErrCols(); // cdf set column headers
+      //  tableInp.value = this.selRowErrorList;    // cdf load the value of the cells from the array into the table object
+        tableInp.paginator = false;
+        tableInp.rows = 20;
+        tableInp.responsive = true;
+        tableInp.rowHover = true;
+        tableInp.pageLinks = 5;
+        tableInp.resizableColumns = true; // column headers overlap without this
+        tableInp.scrollable = true; // frozen row dissapears if this is not set to true
+        }
+      }
+
 
       public initMapRow(RowInp: any []) {
         this.MapJSONString = '{'; // formatting a string so it can be converted to JSON
@@ -166,6 +187,32 @@ export class AppComponent implements OnInit {
         }
       }
 
+      public initErrCols (): Array<Column>  {
+        let aCols: Array<Column> ;
+        let aColumn: Column;
+
+        aCols = new Array<Column>();
+        aColumn = new Column; // need a new object each time to add new item to array
+        aColumn.field = 'row';
+        aColumn.header = 'Row';
+        aColumn.editable = false;
+        aCols.push(aColumn);
+
+
+        aColumn = new Column; // need a new object each time to add new item to array
+        aColumn.field = 'column';
+        aColumn.header = 'Column';
+        aColumn.editable = false;
+        aCols.push(aColumn);
+
+        aColumn = new Column; // need a new object each time to add new item to array
+        aColumn.field = 'description';
+        aColumn.header = 'Description';
+        aColumn.editable = false;
+        aCols.push(aColumn);
+
+        return aCols;
+      }
 
       public initCols(keys: any[]): Array<Column> {
 
@@ -210,6 +257,23 @@ export class AppComponent implements OnInit {
       }
 
 
+      public errorsByRowID(RowID: number, ErrorList: Array<ErrorType> ): Array<ErrorType> {
+        return ErrorList.filter(ErrorType => ErrorType.row === RowID);
+      }
+
+      public errorsByRowIDcolumnIndex(RowID: number, columnIndex: number, ErrorList: Array<ErrorType> ): Array<ErrorType> {
+        return ErrorList.filter(ErrorType => (ErrorType.row === RowID && ErrorType.column === columnIndex)); // Match by column and row
+      }
+
+
+      public errorInCell(RowID: number, columnIndex: number):boolean {
+         let Errors: Array<ErrorType>;
+         Errors = new Array<ErrorType>();
+         Errors = this.errorsByRowIDcolumnIndex(RowID, columnIndex, this.ErrorList);
+         return (Errors.length > 0);
+      }
+
+
 
       ngOnInit(): void {
 
@@ -228,7 +292,15 @@ export class AppComponent implements OnInit {
         this.initMapRow(this.dataMapRow);
 
         this.initTable(this.tableImport);
-      }
+        this.initTableErrors(this.tableErrors);
+
+        console.log(this.tableErrors);
+
+     }
+
+    /* ngAfterViewInit() {
+          this.initTableErrors(this.tableErrors);
+     }*/
 
       public onAction(event: any) {
         console.log(event);
@@ -307,7 +379,7 @@ export class AppComponent implements OnInit {
       }
 
       public Validate(event: any){
-        // todo
+        this.getErrorList();
       }
 
 
@@ -318,6 +390,30 @@ export class AppComponent implements OnInit {
           return 'set-row-default';
         }
       }
+
+      onRowExpand(event: any) {
+        this.selRowErrorList = this.errorsByRowID(event.data.PK, this.ErrorList);
+        this.initTableErrors(this.tableErrors);
+
+
+       console.log(this.selRowErrorList);
+      }
+
+      GetErrorStatusStyle(CellIndex: number, Rowindex: number) {
+        if (this.errorInCell(Rowindex, CellIndex)) {
+          return 'set-error-cell';
+        }
+        else {
+           return 'set-no-error-cell';
+        }
+      }
+
+
+    /*  GetErrorStatusStyle(thing: any) {
+          console.log(thing);
+          return 'set-no-error-cell';
+
+      }*/
 
 
       public onAdded(event: any){
@@ -356,8 +452,6 @@ export class AppComponent implements OnInit {
 
                 this.FieldNames = Object.values(this.data[0]);
                 this.Keys = Object.keys(this.data[0]);
-
-
 
                 this.SizeCols = this.FieldNames.length;
                 this.SizeData = this.data.length;

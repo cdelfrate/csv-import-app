@@ -1,4 +1,4 @@
-import { InMemoryDbService } from 'angular-in-memory-web-api';
+  import { InMemoryDbService } from 'angular-in-memory-web-api';
 export class InMemoryDataService implements InMemoryDbService {
   createDb() {
 
@@ -37,10 +37,13 @@ export class InMemoryDataService implements InMemoryDbService {
 
 
     const ErrorList  = [
-      { row: 1,  column : 5, description: 'date format'  },
-      { row: 10, column : 3, description: 'number required' },
-      { row: 12, column : 2, description: 'Name'  },
-      { row: 15, column : 6, description: 'overflow'  }
+      { row: 1,  column : 1, description: 'date format'  },
+      { row: 1,  column : 3, description: 'date format'  },
+      { row: 2,  column : 5, description: 'date format'  },
+      { row: 2,  column : 5, description: 'date format'  },
+      { row: 3, column : 3, description: 'number required' },
+      { row: 3, column : 2, description: 'Name'  },
+      { row: 4, column : 6, description: 'overflow'  }
     ];
 
 
