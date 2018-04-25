@@ -25,7 +25,7 @@ import {DataImportService} from './data-import.service';
 
 @NgModule({
   imports: [ BrowserModule, Ng2FileInputModule.forRoot(),
-             PapaParseModule, DataTableModule, TableModule,
+             PapaParseModule, DataTableModule, TableModule, 
              PaginatorModule, FormsModule, DropdownModule, ToggleButtonModule,
              BrowserAnimationsModule, 
              HttpClientModule,

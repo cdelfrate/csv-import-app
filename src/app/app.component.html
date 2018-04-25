@@ -58,12 +58,13 @@
     
 
 
-      <!--  <p-table 
+      <p-table 
         #tableImport class="datable1"
         [(selection)]="selectedRow"
         styleClass = "table table-hover"
         (onRowSelect)="onRowSelect($event)"
         (onPageChange)="onPageChange($event)"
+        (onRowExpand)="onRowExpand($event)"
         margin-top = "20%"
    
         
@@ -73,6 +74,7 @@
   
            <ng-template pTemplate="header" let-columns >
               <tr >
+                  <th style="width: 2.25em"></th>
                   <th *ngFor="let col of columns" >
                       {{col.header}}
                   </th>
@@ -82,6 +84,7 @@
            <ng-template pTemplate="frozenrows" let-row let-rowIndex="rowIndex" let-columns="columns" >
               
               <tr  >    
+                <td style="width: 2.25em"></td>  
                 <td #td1 *ngFor="let col of columns"  
                     [ngClass]="(row[col.field]  == 'Map Column' || row[col.field] == null) ? 'set-unmapped-cell' : 'set-mapped-cell' " 
                      >
@@ -103,26 +106,26 @@
            </ng-template>
         
             <ng-template pTemplate="body" let-row let-rowIndex="rowIndex" let-expanded="expanded" let-columns="columns">
-              <tr *ngIf = "rowIndex > 0;"  >
+              <tr #tr1 *ngIf = "rowIndex >= 0;"  >
 
-                 <td>
-                     <a href="#" [pRowToggler]="rowData">
-                                <i [ngClass]="expanded ? 'fa fa-fw fa-chevron-circle-down' : 'fa fa-fw fa-chevron-circle-right'"></i>
+                                  
+                 <td style="width: 2.25em">
+                     <a href="#" [pRowToggler]="row">
+                        <i [ngClass]="expanded ? 'fa fa-fw fa-chevron-circle-down' : 'fa fa-fw fa-chevron-circle-right'"></i>
                      </a>  
                  </td>
 
 
-                 <td #td2 pEditableColumn *ngFor="let col of columns" >
+                 <td #td2 pEditableColumn *ngFor="let col of columns" [ngClass]="GetErrorStatusStyle(td2.cellIndex, tr1.rowIndex )" > 
                     
-                     
-
+                <!-- <td #td2 pEditableColumn *ngFor="let col of columns" [ngClass]="GetErrorStatusStyle(td2 )" >  -->
                     <p-cellEditor>
 
                             <ng-template pTemplate="input">
-                               <input type="text" [(ngModel)]="row[col.field]">
+                               <input type="text" [(ngModel)]="row[col.field]"  >
                             </ng-template>
                             
-                            <ng-template pTemplate="output">
+                            <ng-template pTemplate="output" >
                                 {{row[col.field]}}
                             </ng-template>
 
@@ -134,24 +137,53 @@
 
 
 
-            <ng-template pTemplate="rowexpansion" let-rowData let-columns="columns">
+            <ng-template pTemplate="rowexpansion" let-row let-rowIndex="rowIndex" let-columns="columns">
+                
                 <tr>
                     <td [attr.colspan]="columns.length + 1">
-                        <div  >
-                            <!-- {{row[col.field]}} -->
-                          <!--  yertyrejglfkdg
+                        <div>
+                           
+
+                           <p-table 
+                             #tableErrors class="datable1"
+                           
+                            >
+                               
+                               <ng-template pTemplate="header" >
+                                    <tr>
+                                    
+                                        <th style="width: 2.25em"></th>
+                                        <th *ngFor="let col of ErrorCols" >
+                                             {{col.header}}
+                                        </th>
+                                        
+                                    </tr>
+                                </ng-template>
+                                
+                                <ng-template pTemplate="body" let-rowData >
+                                        <tr>
+                                            <td style="width: 2.25em"></td>  
+                                            <td *ngFor="let col of ErrorCols" >
+                                                {{rowData[col.field]}}
+                                            </td>
+                                            
+                                        </tr>
+                                 </ng-template>
+                            </p-table>
+                            
+
                            
                         </div>
                     </td>
                 </tr>
             </ng-template>
      
-        </p-table>  -->
+        </p-table> 
 
-        
+     
 
 
-        <p-table 
+  <!--      <p-table 
         #tableImport class="datable1"
         [(selection)]="selectedRow"
         styleClass = "table table-hover"
@@ -215,8 +247,20 @@
                  </td> 
               </tr>
             </ng-template>
+
+
+            <ng-template pTemplate="rowexpansion" let-rowData let-columns="columns">
+                <tr>
+                    <td [attr.colspan]="columns.length + 1">
+                        <div  >
+                            {{row[col.field]}}
+                        </div>
+                    </td>
+                </tr>
+            </ng-template>
+
      
-        </p-table>  
+        </p-table>  -->
 
         
 

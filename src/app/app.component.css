@@ -204,6 +204,22 @@ div.divrightxxx {
 } 
 
 
+.set-error-cell {
+  /* TODO: first try this without '!important', but you might need it */
+ 
+  background: rgba(228, 75, 75, 0.966) !important;
+ 
+
+} 
+
+.set-no-error-cell {
+  /* TODO: first try this without '!important', but you might need it */
+
+  background: rgba(161, 202, 10, 0.966) !important;
+
+} 
+
+
 .ui-table table {
   /*table-layout: auto; */
   table-layout: fixed;
