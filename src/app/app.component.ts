@@ -266,11 +266,16 @@ export class AppComponent implements OnInit/*, AfterViewInit*/ {
       }
 
 
-      public errorInCell(RowID: number, columnIndex: number):boolean {
+      public errorInCell(RowID: number, columnIndex: number): boolean {
+
+         if (!(this.ErrorList === undefined)) { // don't try to find errors if the array is empty
          let Errors: Array<ErrorType>;
          Errors = new Array<ErrorType>();
          Errors = this.errorsByRowIDcolumnIndex(RowID, columnIndex, this.ErrorList);
+
          return (Errors.length > 0);
+        }
+        else {return false;}
       }
 
 
@@ -473,26 +478,26 @@ export class AppComponent implements OnInit/*, AfterViewInit*/ {
         this.Display = true;
       }
 
-      public onRemoved(event: any){
-        this.actionLog += "\n FileInput: " + event.id;
+      public onRemoved(event: any) {
+        this.actionLog += '\n FileInput: ' + event.id;
         this.actionLog += '\n Action: File removed';
       }
-      public onInvalidDenied(event: any){
+      public onInvalidDenied(event: any) {
         this.actionLog += '\n FileInput: ' + event.id;
         this.actionLog += '\n Action: File denied';
       }
-      public onCouldNotRemove(event: any){
+      public onCouldNotRemove(event: any) {
         this.actionLog += '\n FileInput: ' + event.id;
         this.actionLog += '\n Action: Could not remove file';
       }
-      public resetFileInput(): void{
+      public resetFileInput(): void {
         this.ng2FileInputService.reset(this.myFileInputIdentifier);
       }
-      public logCurrentFiles(): void{
+      public logCurrentFiles(): void {
         const files = this.ng2FileInputService.getCurrentFiles(this.myFileInputIdentifier);
         this.actionLog += '\n The currently added files are: ' + this.getFileNames(files);
       }
-      private getFileNames(files: File[]): string{
+      private getFileNames(files: File[]): string {
         const names = files.map(file => file.name);
         return names ? names.join(', ') : 'No files currently added.';
       }
