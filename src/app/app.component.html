@@ -116,9 +116,8 @@
                  </td>
 
 
-                 <td #td2 pEditableColumn *ngFor="let col of columns" [ngClass]="GetErrorStatusStyle(td2.cellIndex, tr1.rowIndex )" > 
-                    
-                <!-- <td #td2 pEditableColumn *ngFor="let col of columns" [ngClass]="GetErrorStatusStyle(td2 )" >  -->
+                 <td #td2 pEditableColumn *ngFor="let col of columns" [ngClass]="GetErrorStatusStyle(td2.cellIndex, tr1.cells[1].innerText)" > 
+
                     <p-cellEditor>
 
                             <ng-template pTemplate="input">

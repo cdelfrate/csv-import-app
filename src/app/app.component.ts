@@ -147,7 +147,6 @@ export class AppComponent implements OnInit/*, AfterViewInit*/ {
       public initTableErrors(tableInp: Table) {
 
         if (tableInp !== undefined) {
-      //  tableInp.columns = this.initErrCols(); // cdf set column headers
         this.ErrorCols = this.initErrCols(); // cdf set column headers
       //  tableInp.value = this.selRowErrorList;    // cdf load the value of the cells from the array into the table object
         tableInp.paginator = false;
@@ -173,7 +172,7 @@ export class AppComponent implements OnInit/*, AfterViewInit*/ {
         RowInp.unshift(JSON.parse(this.MapJSONString));// Add it to first row of the table in order to list fields that may be mapped for import
       }
 
-      public addPrimaryKey(data: any []) {
+      public addPrimaryKey(data: any []) {  // might be good to have a unique ID assigned so that later after validation we can locate records with errors
         let fi: FieldItem;
         let cnt: number;
 
@@ -266,7 +265,7 @@ export class AppComponent implements OnInit/*, AfterViewInit*/ {
       }
 
 
-      public errorInCell(RowID: number, columnIndex: number): boolean {
+      /*public errorInCell(RowID: number, columnIndex: number): boolean {
 
          if (!(this.ErrorList === undefined)) { // don't try to find errors if the array is empty
          let Errors: Array<ErrorType>;
@@ -276,7 +275,19 @@ export class AppComponent implements OnInit/*, AfterViewInit*/ {
          return (Errors.length > 0);
         }
         else {return false;}
-      }
+      }*/
+
+      public errorInCell(RowID: number, columnIndex: number): boolean {
+
+        if (!(this.ErrorList === undefined)) { // don't try to find errors if the array is empty
+        let Errors: Array<ErrorType>;
+        Errors = new Array<ErrorType>();
+        Errors = this.errorsByRowIDcolumnIndex(RowID, columnIndex, this.ErrorList);
+
+        return (Errors.length > 0);
+       }
+       else {return false;}
+     }
 
 
 
@@ -404,14 +415,27 @@ export class AppComponent implements OnInit/*, AfterViewInit*/ {
        console.log(this.selRowErrorList);
       }
 
+
       GetErrorStatusStyle(CellIndex: number, Rowindex: number) {
-        if (this.errorInCell(Rowindex, CellIndex)) {
+        console.log(Rowindex);
+
+        if (this.errorInCell( Number(Rowindex), CellIndex)) {
           return 'set-error-cell';
         }
         else {
            return 'set-no-error-cell';
         }
       }
+
+
+     /* GetErrorStatusStyle(CellIndex: number, Rowindex: number) {
+        if (this.errorInCell(Rowindex, CellIndex)) {
+          return 'set-error-cell';
+        }
+        else {
+           return 'set-no-error-cell';
+        }
+      }*/
 
 
     /*  GetErrorStatusStyle(thing: any) {
